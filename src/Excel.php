@@ -1,12 +1,6 @@
 <?php
 
 namespace XiangYu2038\Excel;
-
-
-
-
-
-
 class Excel
 {
     /**
@@ -14,8 +8,8 @@ class Excel
      * @param
      * @return mixed
      */
-    protected function includeExcelExport(){
-        include_once base_path().'/lib/PHPExcel/PHPExcel.class.php';
+    public static function includeExcelExport(){
+        include_once __DIR__.'/PHPExcel/PHPExcel.class.php';
         return  new \PHPExcel();
     }
 
@@ -42,11 +36,11 @@ class Excel
 
     /////////////////////////////////////////////////////////////////////////////////////
     /// /////////////////////////////////////////////////////////////////////////////////
-    protected function exports($data,$headArr,$title='导出表格',$sheet_title=['出库数据汇总'],$php_eol=['F'],$width=[['F','60']]){
-        $objPHPExcel = $this->includeExcelExport();
+    public static function export($data,$headArr,$title='导出表格',$sheet_title=['出库数据汇总'],$php_eol=['F'],$width=[['F','60']]){
+        $objPHPExcel = self::includeExcelExport();
         foreach ($data as $key=>$v){
             $titles=$sheet_title[$key];
-            $this->sheet($v,$objPHPExcel,$headArr,$titles,$php_eol,$width,$key);
+            self::sheet($v,$objPHPExcel,$headArr,$titles,$php_eol,$width,$key);
         }
         $fileName = iconv("utf-8", "gb2312", $title . date('Ymd') . '.xls');
         $objPHPExcel->setActiveSheetIndex(0);
@@ -57,7 +51,7 @@ class Excel
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output'); //文件通过浏览器下载
     }
-    protected function sheet($data,&$objPHPExcel,$headArr,$title='测试title',$php_eol=['F'],$width=[['F','60']],$keys){
+    public static function sheet($data,&$objPHPExcel,$headArr,$title='测试title',$php_eol,$width,$keys){
 
         $objPHPExcel->getProperties(); //获取属性
         $objPHPExcel->createSheet();
